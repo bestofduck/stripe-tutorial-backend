@@ -3,29 +3,26 @@ const {onRequest} = require("firebase-functions/v2/https");
 const {SecretManagerServiceClient} = require("@google-cloud/secret-manager");
 const client = new SecretManagerServiceClient();
 
+const { initializeApp, applicationDefault, cert } = require('firebase-admin/app');
+const { getFirestore, Timestamp, FieldValue, Filter } = require('firebase-admin/firestore');
+
+initializeApp();
+
 exports.viewProducts = onRequest(async (req, res) => {
-  // Access the secret.
-  const [accessResponse] = await client.accessSecretVersion({
-    name: "projects/724582635633/secrets/stripe-secret-key/versions/1",
-  });
+  const db = getFirestore();
 
-  const responsePayload = accessResponse.payload.data.toString("utf8");
+  const resp = await db.collection('cities').doc('LA').set({"test": "t"});
 
-  const stripe = require("stripe")(responsePayload);
-  const response = await stripe.products.list({
-    expand: ['data.default_price']
-  });
+  // const products = response.data.map(item=>{
+  //   return {
+  //     id: item.id,
+  //     name: item.name,
+  //     price: item.default_price.unit_amount,
+  //     currency: item.default_price.currency
+  //   }
+  // })
 
-  const products = response.data.map(item=>{
-    return {
-      id: item.id,
-      name: item.name,
-      price: item.default_price.unit_amount,
-      currency: item.default_price.currency
-    }
-  })
-
-  res.json(products);
+  res.json();
 });
 
 exports.addProduct = onRequest(async (req, res) => {

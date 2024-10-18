@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "cloud-functions-test-50f9c"
-  }
+    "default": "stripe-tutorial-617d0",
+    "dev": "stripe-tutorial-617d0"
+  },
+  "targets": {},
+  "etags": {}
 }
